@@ -44,88 +44,133 @@ function StatusSelect({ value, onChange }) {
 }
 
 function CompanyRow({ company, onUpdate, onDelete }) {
+  const [notesOpen, setNotesOpen] = useState(false)
   const update = (field, val) => onUpdate({ ...company, [field]: val })
+  const hasNotes = company.notes && company.notes.trim().length > 0
 
   return (
-    <tr className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
-      <td className="px-4 py-3 min-w-[120px]">
-        <EditableCell value={company.company} onChange={v => update('company', v)} placeholder="Company" />
-      </td>
-      <td className="px-4 py-3 min-w-[140px]">
-        <EditableCell value={company.role} onChange={v => update('role', v)} placeholder="Role" />
-      </td>
-      <td className="px-4 py-3 min-w-[120px]">
-        <input
-          type="date"
-          value={company.deadline}
-          onChange={e => update('deadline', e.target.value)}
-          className="w-full bg-transparent border-b border-dashed border-gray-300 dark:border-gray-600 focus:border-indigo-500 outline-none text-sm text-gray-700 dark:text-gray-200 py-0.5"
-        />
-      </td>
-      <td className="px-4 py-3">
-        <StatusSelect value={company.status} onChange={v => update('status', v)} />
-      </td>
-      <td className="px-4 py-3 min-w-[120px]">
-        <EditableCell value={company.recruiter} onChange={v => update('recruiter', v)} placeholder="Name" />
-      </td>
-      <td className="px-4 py-3 min-w-[160px]">
-        <EditableCell value={company.recruiterContact} onChange={v => update('recruiterContact', v)} placeholder="email / LinkedIn" />
-      </td>
-      <td className="px-4 py-3 min-w-[200px] max-w-[250px]">
-        <textarea
-          value={company.notes}
-          onChange={e => update('notes', e.target.value)}
-          placeholder="Interview notes..."
-          rows={1}
-          className="w-full bg-transparent border-b border-dashed border-gray-300 dark:border-gray-600 focus:border-indigo-500 outline-none text-sm text-gray-700 dark:text-gray-200 placeholder-gray-300 dark:placeholder-gray-600 resize-none py-0.5"
-          onInput={e => { e.target.style.height = 'auto'; e.target.style.height = e.target.scrollHeight + 'px' }}
-        />
-      </td>
-      <td className="px-4 py-3 min-w-[100px]">
-        {company.jobLink ? (
-          <div className="flex items-center gap-1.5">
-            <a
-              href={company.jobLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"
-            >
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-              Open
-            </a>
+    <>
+      <tr className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
+        <td className="px-4 py-3 min-w-[120px]">
+          <EditableCell value={company.company} onChange={v => update('company', v)} placeholder="Company" />
+        </td>
+        <td className="px-4 py-3 min-w-[140px]">
+          <EditableCell value={company.role} onChange={v => update('role', v)} placeholder="Role" />
+        </td>
+        <td className="px-4 py-3 min-w-[120px]">
+          <input
+            type="date"
+            value={company.deadline}
+            onChange={e => update('deadline', e.target.value)}
+            className="w-full bg-transparent border-b border-dashed border-gray-300 dark:border-gray-600 focus:border-indigo-500 outline-none text-sm text-gray-700 dark:text-gray-200 py-0.5"
+          />
+        </td>
+        <td className="px-4 py-3">
+          <StatusSelect value={company.status} onChange={v => update('status', v)} />
+        </td>
+        <td className="px-4 py-3 min-w-[120px]">
+          <EditableCell value={company.recruiter} onChange={v => update('recruiter', v)} placeholder="Name" />
+        </td>
+        <td className="px-4 py-3 min-w-[160px]">
+          <EditableCell value={company.recruiterContact} onChange={v => update('recruiterContact', v)} placeholder="email / LinkedIn" />
+        </td>
+        <td className="px-4 py-3 min-w-[100px]">
+          {company.jobLink ? (
+            <div className="flex items-center gap-1.5">
+              <a
+                href={company.jobLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"
+              >
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                Open
+              </a>
+              <button
+                onClick={() => update('jobLink', '')}
+                className="text-gray-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          ) : (
+            <input
+              type="url"
+              value={company.jobLink}
+              onChange={e => update('jobLink', e.target.value)}
+              placeholder="https://..."
+              className="w-full bg-transparent border-b border-dashed border-gray-300 dark:border-gray-600 focus:border-indigo-500 outline-none text-xs text-gray-700 dark:text-gray-200 placeholder-gray-300 dark:placeholder-gray-600 py-0.5"
+            />
+          )}
+        </td>
+        <td className="px-4 py-3">
+          <div className="flex items-center gap-1">
+            {/* Notes toggle */}
             <button
-              onClick={() => update('jobLink', '')}
-              className="text-gray-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={() => setNotesOpen(o => !o)}
+              title={notesOpen ? 'Hide notes' : 'View / edit notes'}
+              className={`p-1.5 rounded-lg transition-colors flex items-center gap-1 text-xs font-medium ${
+                notesOpen
+                  ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400'
+                  : hasNotes
+                  ? 'text-indigo-500 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20'
+                  : 'text-gray-300 dark:text-gray-600 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 opacity-0 group-hover:opacity-100'
+              }`}
             >
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+              </svg>
+              {hasNotes && !notesOpen && (
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 inline-block" />
+              )}
+            </button>
+            {/* Delete */}
+            <button
+              onClick={() => onDelete(company.id)}
+              className="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors opacity-0 group-hover:opacity-100"
+              title="Remove"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
             </button>
           </div>
-        ) : (
-          <input
-            type="url"
-            value={company.jobLink}
-            onChange={e => update('jobLink', e.target.value)}
-            placeholder="https://..."
-            className="w-full bg-transparent border-b border-dashed border-gray-300 dark:border-gray-600 focus:border-indigo-500 outline-none text-xs text-gray-700 dark:text-gray-200 placeholder-gray-300 dark:placeholder-gray-600 py-0.5"
-          />
-        )}
-      </td>
-      <td className="px-4 py-3">
-        <button
-          onClick={() => onDelete(company.id)}
-          className="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors opacity-0 group-hover:opacity-100"
-          title="Remove"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
-        </button>
-      </td>
-    </tr>
+        </td>
+      </tr>
+
+      {/* Expandable notes row */}
+      {notesOpen && (
+        <tr className="bg-indigo-50/60 dark:bg-indigo-900/10 border-b border-indigo-100 dark:border-indigo-900/40">
+          <td colSpan={8} className="px-5 py-3">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 mt-1">
+                <svg className="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wide mb-1.5">
+                  Notes — {company.company} {company.role}
+                </p>
+                <textarea
+                  value={company.notes}
+                  onChange={e => update('notes', e.target.value)}
+                  placeholder="Add interview notes, referral contacts, prep reminders, anything relevant..."
+                  rows={3}
+                  autoFocus
+                  className="w-full bg-white dark:bg-gray-800 border border-indigo-200 dark:border-indigo-800 rounded-lg px-3 py-2 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-none transition-colors"
+                  onInput={e => { e.target.style.height = 'auto'; e.target.style.height = e.target.scrollHeight + 'px' }}
+                />
+              </div>
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
   )
 }
 
@@ -202,7 +247,7 @@ export default function CompanyTracker() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="page-header">Company Tracker</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{companies.length} companies · All fields editable inline</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{companies.length} companies · Click the chat icon on any row to expand notes</p>
         </div>
         <button onClick={addCompany} className="btn-primary">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -261,12 +306,11 @@ export default function CompanyTracker() {
                   { label: 'Status', field: 'status' },
                   { label: 'Recruiter', field: 'recruiter' },
                   { label: 'Contact', field: 'recruiterContact' },
-                  { label: 'Notes', field: 'notes' },
                   { label: 'Job Link', field: 'jobLink' },
                   { label: '', field: '' },
                 ].map(col => (
                   <th
-                    key={col.field}
+                    key={col.label}
                     onClick={() => col.field && handleSort(col.field)}
                     className={`px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide whitespace-nowrap ${col.field ? 'cursor-pointer hover:text-gray-700 dark:hover:text-gray-200 select-none' : ''}`}
                   >
@@ -279,7 +323,7 @@ export default function CompanyTracker() {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="px-4 py-8 text-center text-gray-400 dark:text-gray-500 text-sm">
+                  <td colSpan={8} className="px-4 py-8 text-center text-gray-400 dark:text-gray-500 text-sm">
                     No companies match the current filter.
                   </td>
                 </tr>
