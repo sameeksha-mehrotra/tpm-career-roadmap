@@ -47,7 +47,7 @@ function CompanyRow({ company, onUpdate, onDelete }) {
   const update = (field, val) => onUpdate({ ...company, [field]: val })
 
   return (
-    <tr className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-750 group transition-colors">
+    <tr className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 group transition-colors">
       <td className="px-4 py-3 min-w-[120px]">
         <EditableCell value={company.company} onChange={v => update('company', v)} placeholder="Company" />
       </td>
