@@ -83,11 +83,9 @@ function LeetCodeSection() {
       <div className="flex items-center justify-between">
         <h2 className="section-header">LeetCode Tracker</h2>
         <div className="flex items-center gap-2">
-          {lc.streak > 0 && (
-            <span className="flex items-center gap-1 text-sm font-bold text-orange-500">
-              🔥 {lc.streak}-day streak
-            </span>
-          )}
+          <span className={`flex items-center gap-1 text-sm font-bold ${lc.streak > 0 ? 'text-orange-500' : 'text-gray-400 dark:text-gray-500'}`}>
+            🔥 {lc.streak}-day streak
+          </span>
           <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">{total} solved total</span>
         </div>
       </div>
